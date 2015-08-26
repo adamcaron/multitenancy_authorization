@@ -18,8 +18,12 @@ class ApplicationController < ActionController::Base
   end
 
   def authorize!
-    unless current_permission.allow?(params[:controller], params[:action])
-      redirect_to root_url, danger: "You don't know me."
-    end
+    redirect_to root_url, danger: "You don't know me." unless authorized?
+  end
+
+  private
+
+  def authorized?
+    current_permission.allow?(params[:controller], params[:action])
   end
 end
