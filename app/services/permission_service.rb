@@ -10,6 +10,8 @@ class PermissionService
 
     if user.registered_user?
       registered_user_permissions
+    elsif user.store_admin?
+      store_admin_permissions
     else
       guest_user_permissions
     end
@@ -25,5 +27,12 @@ class PermissionService
   def guest_user_permissions
     return true if controller == 'stores' && action == 'index'
     return true if controller == 'sessions' && action.in?(%(new create destroy))
+  end
+
+  def store_admin_permissions
+    return true if controller == 'stores' && action.in?(%w(index show))
+    return true if controller == 'sessions' && action.in?(%w(new create destroy))
+    return true if controller == 'items' && action.in?(%w(index show))
+    return true if controller === 'orders' && action.in?(%w(index show))
   end
 end
